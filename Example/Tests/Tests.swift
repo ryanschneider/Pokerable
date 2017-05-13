@@ -9,7 +9,7 @@ class PokerableSpec: QuickSpec {
         describe("a simple 5-card poker evaluator") {
             it("can evaluate basic poker hands") {
                 let h = Hand(from: "As,Ad,2c,3h,Kh")
-                expect(h.rank) == HandRank.pair
+                expect(h.rank) == Hand.Rank.pair
             }
 
             it("can compare two poker hands") {
@@ -23,8 +23,8 @@ class PokerableSpec: QuickSpec {
 
             it("can evaluate all poker hands") {
                 var deck = [Card]()
-                for rank in CardRank.two...CardRank.ace {
-                    for suit in [Suit.spades, Suit.hearts, Suit.diamonds, Suit.clubs] {
+                for rank in Card.Rank.two...Card.Rank.ace {
+                    for suit in [Card.Suit.spades, Card.Suit.hearts, Card.Suit.diamonds, Card.Suit.clubs] {
                         deck.append(Card(suit: suit, rank: rank))
                     }
 
@@ -32,7 +32,7 @@ class PokerableSpec: QuickSpec {
 
                 expect(deck.count).to(equal(52))
 
-                var frequencies = [HandRank: Int]()
+                var frequencies = Dictionary<Hand.Rank, Int>()
 
                 for a in 0 ..< 48 {
                     for b in a+1 ..< 49 {

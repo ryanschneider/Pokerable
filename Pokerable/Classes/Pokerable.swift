@@ -8,188 +8,147 @@
 
 import Foundation
 
-public enum Suit: Int, CustomStringConvertible {
-    case spades     = 0x1000
-    case hearts     = 0x2000
-    case diamonds   = 0x4000
-    case clubs      = 0x8000
-}
-
-public enum CardRank: Int, CustomStringConvertible, Comparable, Strideable {
-    case two = 0
-    case three
-    case four
-    case five
-    case six
-    case seven
-    case eight
-    case nine
-    case ten
-    case jack
-    case queen
-    case king
-    case ace
-
-    public typealias Stride = Int
-
-    public func advanced(by n: Int) -> CardRank {
-        return CardRank(rawValue: self.rawValue + n)!
-    }
-
-    public func distance(to other: CardRank) -> Int {
-        return other.rawValue - self.rawValue
-    }
-}
-
-public typealias CardValue = UInt32
-public typealias HandValue = UInt32
-
 public struct Card {
-    public let suit: Suit
-    public let rank: CardRank
+    var compact: UInt8
+    
+    public enum Suit: UInt8 {
+        case spades     = 0b00010000
+        case hearts     = 0b00100000
+        case diamonds   = 0b01000000
+        case clubs      = 0b10000000
 
-    public var value: CardValue {
-        let r = rank.rawValue
-        let s = suit.rawValue
-
-        return CardValue(CKEvaluator.data.primes[r] | (r << 8) | s | (1 << (16+r)))
+        var compact: UInt8 {
+            return self.rawValue
+        }
     }
 
-    public init(suit: Suit, rank: CardRank) {
-        self.suit = suit
-        self.rank = rank
+    public enum Rank: UInt8, Comparable, Strideable {
+        case two    = 1
+        case three  = 2
+        case four   = 3
+        case five   = 4
+        case six    = 5
+        case seven  = 6
+        case eight  = 7
+        case nine   = 8
+        case ten    = 9
+        case jack   = 10
+        case queen  = 11
+        case king   = 12
+        case ace    = 13
+
+        public typealias Stride = Int
+
+        public func advanced(by n: Int) -> Card.Rank {
+            let new = UInt8(
+                Int(self.rawValue) + n
+            )
+            return Card.Rank(rawValue: new)!
+        }
+        
+        public func distance(to other: Card.Rank) -> Int {
+            return Int(other.rawValue) - Int(self.rawValue)
+        }
+
+        var compact: UInt8 {
+            return self.rawValue
+        }
+    }
+
+    public var suit: Suit {
+        return Suit(rawValue: self.compact & 0b11110000)!
+    }
+
+    public var rank: Rank {
+        return Rank(rawValue: self.compact & 0b00001111)!
+    }
+
+    init(compact: UInt8) {
+        self.compact = compact
+    }
+
+    public init(suit: Suit, rank: Rank) {
+        self.compact = suit.compact | rank.compact
     }
 }
 
-public enum HandRank: Int {
-    case invalid = 0
-    case highCard
-    case pair
-    case twoPair
-    case threeOfAKind
-    case straight
-    case flush
-    case fullHouse
-    case fourOfAKind
-    case straightFlush
-}
+public struct Hand {
+    public enum Rank: Int {
+        case invalid = 0
+        case highCard
+        case pair
+        case twoPair
+        case threeOfAKind
+        case straight
+        case flush
+        case fullHouse
+        case fourOfAKind
+        case straightFlush
+    }
 
-public extension HandValue {
-    static let worst: HandValue = HandValue.max
-}
+    // Bytes:  0 1 2 3 4 5 6 7
+    // Card:   0 1 2 3 4 - - -
+    // Rank:   - - - - - - R R
 
-public protocol Pokerable {
-    var cards: [Card] { get }
-    var value: HandValue { get set }
-    var rank: HandRank { get }
-}
+    var _cards: UInt64
 
-public class Hand: Pokerable {
-    public var cards: [Card]
-    private var hash: Int
+    subscript(index: Int) -> Card {
+        get {
+            switch index {
+            case 0:
+                return Card(compact: UInt8((_cards & 0xFF_00_00_00_00_00_00_00) >> (64 - 8 )))
+            case 1:
+                return Card(compact: UInt8((_cards & 0x00_FF_00_00_00_00_00_00) >> (64 - 16)))
+            case 2:
+                return Card(compact: UInt8((_cards & 0x00_00_FF_00_00_00_00_00) >> (64 - 24)))
+            case 3:
+                return Card(compact: UInt8((_cards & 0x00_00_00_FF_00_00_00_00) >> (64 - 32)))
+            case 4:
+                return Card(compact: UInt8((_cards & 0x00_00_00_00_FF_00_00_00) >> (64 - 40)))
+            default:
+                fatalError("Invalid index \(index).  Valid indices are 0-4.")
+            }
+        }
 
-    public init() {
-        self.cards = [Card]()
-        self.hash = 0
-        self.hash = currentHash()
+        set(newValue) {
+            switch index {
+            case 0:
+                _cards |= UInt64(newValue.compact) << (64-8)
+            case 1:
+                _cards |= UInt64(newValue.compact) << (64-16)
+            case 2:
+                _cards |= UInt64(newValue.compact) << (64-24)
+            case 3:
+                _cards |= UInt64(newValue.compact) << (64-32)
+            case 4:
+                _cards |= UInt64(newValue.compact) << (64-40)
+            default:
+                fatalError("Invalid index \(index).  Valid indices are 0-4.")
+            }
+        }
+    }
+
+    public var rank: Hand.Rank {
+        return Hand.Rank(from: self.value)
     }
 
     public init(cards: [Card]) {
-        self.cards = cards
-        self.hash = 0
-        self.hash = currentHash()
-        self._value = self.evaluate()
-    }
+        _cards = 0
 
-    private func currentHash() -> Int {
-        return self.cards.reduce(5381) {
-            ($0 << 5) &+ $0 &+ Int($1.value.hashValue)
+        for (i, card) in cards.enumerated() {
+            self[i] = card
         }
-    }
 
-    private var _value: HandValue = .worst
-    public var value: HandValue {
-        get {
-            if self.hash != currentHash() {
-                self._value = self.evaluate()
-            }
-            return self._value
+        if cards.count == 5 {
+            self.value = evaluate()
         }
-        set {
-            self._value = newValue
+        else {
+            self.value = Hand.Expanded.worst
         }
-    }
-
-    public var rank: HandRank {
-        return HandRank(from: self.value)
     }
 }
 
-public extension Pokerable {
-    func evaluate() -> HandValue {
-        if self.cards.count != 5 {
-            return HandValue.worst
-        }
-
-        return CKEvaluator.evaluate(
-            c1: self.cards[0].value,
-            c2: self.cards[1].value,
-            c3: self.cards[2].value,
-            c4: self.cards[3].value,
-            c5: self.cards[4].value
-        )
-    }
-}
-
-extension HandRank {
-    init(from value: HandValue) {
-        if value > 7462 {
-            self = .invalid
-            return
-        }
-        else if value > 6185 {
-            self = .highCard
-            return
-        }
-        else if value > 3325 {
-            self = .pair
-            return
-        }
-        else if value > 2467 {
-            self = .twoPair
-            return
-        }
-        else if value > 1609 {
-            self = .threeOfAKind
-            return
-        }
-        else if value > 1599 {
-            self = .straight
-            return
-        }
-        else if value > 322 {
-            self = .flush
-            return
-        }
-        else if value > 166 {
-            self = .fullHouse
-            return
-        }
-        else if value > 10 {
-            self = .fourOfAKind
-            return
-        }
-        else if value >= 0 {
-            self = .straightFlush
-            return
-        }
-
-        assertionFailure("This should be unreachable")
-        self = .invalid
-    }
-}
-
-public extension Suit {
+public extension Card.Suit {
     init?(from string: String) {
         let l = string.lowercased()
 
@@ -244,8 +203,8 @@ public extension Suit {
     }
 }
 
-public extension CardRank {
-    private static var lookup: [CardRank:String] {
+public extension Card.Rank {
+    private static var lookup: [Card.Rank:String] {
         return [
             .two: "2",
             .three: "3",
@@ -265,7 +224,7 @@ public extension CardRank {
     init?(from string: String) {
         let u = string.uppercased()
 
-        for (value, prefix) in CardRank.lookup {
+        for (value, prefix) in Card.Rank.lookup {
             if u.hasPrefix(prefix) {
                 self = value
                 return
@@ -276,7 +235,7 @@ public extension CardRank {
     }
 
     public var glyph: String {
-        return CardRank.lookup[self]!
+        return Card.Rank.lookup[self]!
     }
 
     public var description: String {
@@ -287,19 +246,18 @@ public extension CardRank {
 public extension Card {
     init?(from string: String) {
         guard
-            let rank = CardRank(from: string),
+            let rank = Card.Rank(from: string),
             let suit = Suit(from: string)
         else {
             return nil
         }
 
-        self.rank = rank
-    self.suit = suit
+        self.init(suit: suit, rank: rank)
     }
 }
 
 public extension Hand {
-    convenience init(from string: String) {
+    init(from string: String) {
         let possibles = string.components(separatedBy: ",").map {
             Card(from: $0)
         }
@@ -307,14 +265,14 @@ public extension Hand {
         self.init(cards: possibles.removeNils())
     }
 
-    convenience init(from strings: String...) {
+    init(from strings: String...) {
         let possibles = strings.map {
             Card(from: $0)
         }
         self.init(cards: possibles.removeNils())
     }
 
-    convenience init(from cards: Card...) {
+    init(from cards: Card...) {
         self.init(cards: cards)
     }
 }
@@ -323,22 +281,22 @@ public func ==(lhs: Card, rhs: Card) -> Bool {
     return lhs.suit == rhs.suit && lhs.rank == rhs.rank
 }
 
-public func < (left: Pokerable, right: Pokerable) -> Bool {
+public func < (left: Hand, right: Hand) -> Bool {
     return left.value > right.value
 }
 
-public func > (left: Pokerable, right: Pokerable) -> Bool {
+public func > (left: Hand, right: Hand) -> Bool {
     return left.value < right.value
 }
 
-public func ==(left: Pokerable, right: Pokerable) -> Bool {
+public func ==(left: Hand, right: Hand) -> Bool {
     return left.value == right.value
 }
 
-public func <= (left: Pokerable, right: Pokerable) -> Bool {
+public func <= (left: Hand, right: Hand) -> Bool {
     return left < right || left == right
 }
 
-public func >= (left: Pokerable, right: Pokerable) -> Bool {
+public func >= (left: Hand, right: Hand) -> Bool {
     return left > right || left == right
 }

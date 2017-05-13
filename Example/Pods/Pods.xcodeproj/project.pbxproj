@@ -90,8 +90,8 @@
 		B5B63AB31EC7797900E2CFBF /* Pokerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63AB21EC7797900E2CFBF /* Pokerable.swift */; };
 		B5B63AB51EC7824100E2CFBF /* CKArrayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63AB41EC7824100E2CFBF /* CKArrayData.swift */; };
 		B5B63AB71EC782F900E2CFBF /* CKArrayConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63AB61EC782F900E2CFBF /* CKArrayConstants.swift */; };
-		B5B63AB91EC784B600E2CFBF /* CKEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63AB81EC784B600E2CFBF /* CKEvaluator.swift */; };
-		B5B63ABB1EC79A5100E2CFBF /* PrivateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63ABA1EC79A5100E2CFBF /* PrivateUtils.swift */; };
+		B5B63ABB1EC79A5100E2CFBF /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63ABA1EC79A5100E2CFBF /* Utils.swift */; };
+		B5B63ABD1EC7CEEE00E2CFBF /* Pokerable+CKImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B63ABC1EC7CEEE00E2CFBF /* Pokerable+CKImpl.swift */; };
 		B9BD565DAB07F8E2288A960A1D3EFAC1 /* MatcherFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB1FA806FF532E4E4DF8E6B4FFEB9C6 /* MatcherFunc.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		BB10A2D0B1EE5B1BA811354116F83E3F /* CwlDarwinDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A5C7D27930FA6D032FA0D83D8E8239 /* CwlDarwinDefinitions.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		BF3AF1D2B46E09E2B3DCC824E6C1F5AF /* Equal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12298FB0CC92BD3BD16C958F3718416 /* Equal.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
@@ -252,8 +252,8 @@
 		B5B63AB21EC7797900E2CFBF /* Pokerable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pokerable.swift; sourceTree = "<group>"; };
 		B5B63AB41EC7824100E2CFBF /* CKArrayData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKArrayData.swift; sourceTree = "<group>"; };
 		B5B63AB61EC782F900E2CFBF /* CKArrayConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKArrayConstants.swift; sourceTree = "<group>"; };
-		B5B63AB81EC784B600E2CFBF /* CKEvaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKEvaluator.swift; sourceTree = "<group>"; };
-		B5B63ABA1EC79A5100E2CFBF /* PrivateUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateUtils.swift; sourceTree = "<group>"; };
+		B5B63ABA1EC79A5100E2CFBF /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		B5B63ABC1EC7CEEE00E2CFBF /* Pokerable+CKImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pokerable+CKImpl.swift"; sourceTree = "<group>"; };
 		B85EE744366A34C7FDACC881DF2B63AB /* mach_excServer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mach_excServer.h; path = Sources/Lib/CwlPreconditionTesting/CwlPreconditionTesting/mach_excServer.h; sourceTree = "<group>"; };
 		B89E09AD26974F1849359B57FE32A6AA /* QuickSpec.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QuickSpec.m; path = Sources/QuickObjectiveC/QuickSpec.m; sourceTree = "<group>"; };
 		B93CBD5A8C953715B286CC18EBD89EA5 /* World+DSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "World+DSL.swift"; path = "Sources/Quick/DSL/World+DSL.swift"; sourceTree = "<group>"; };
@@ -563,8 +563,8 @@
 				B5B63AB21EC7797900E2CFBF /* Pokerable.swift */,
 				B5B63AB41EC7824100E2CFBF /* CKArrayData.swift */,
 				B5B63AB61EC782F900E2CFBF /* CKArrayConstants.swift */,
-				B5B63AB81EC784B600E2CFBF /* CKEvaluator.swift */,
-				B5B63ABA1EC79A5100E2CFBF /* PrivateUtils.swift */,
+				B5B63ABA1EC79A5100E2CFBF /* Utils.swift */,
+				B5B63ABC1EC7CEEE00E2CFBF /* Pokerable+CKImpl.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -839,7 +839,7 @@
 				BB10A2D0B1EE5B1BA811354116F83E3F /* CwlDarwinDefinitions.swift in Sources */,
 				86FFB76B2EDCF4AE79CC4C0BD8A0FE9A /* DSL+Wait.swift in Sources */,
 				1C7CA1FAFBF8B865596C739FEA39CDEE /* DSL.m in Sources */,
-				B5B63ABB1EC79A5100E2CFBF /* PrivateUtils.swift in Sources */,
+				B5B63ABB1EC79A5100E2CFBF /* Utils.swift in Sources */,
 				17261E344C2027602431A636759AC7F2 /* DSL.swift in Sources */,
 				8654571F855691C23B7B8E61B2141944 /* EndWith.swift in Sources */,
 				BF3AF1D2B46E09E2B3DCC824E6C1F5AF /* Equal.swift in Sources */,
@@ -853,7 +853,6 @@
 				A91166D0A5E8F1D5D5377622C381C045 /* Match.swift in Sources */,
 				B9BD565DAB07F8E2288A960A1D3EFAC1 /* MatcherFunc.swift in Sources */,
 				23E2E1E02FE79EE1E1688CBBAA777297 /* MatcherProtocols.swift in Sources */,
-				B5B63AB91EC784B600E2CFBF /* CKEvaluator.swift in Sources */,
 				CE4CEF6328E255B380E2B2692B351CF8 /* MatchError.swift in Sources */,
 				9E95D6E15DBE9B0FC92AAF60D42D1464 /* Nimble-dummy.m in Sources */,
 				F9D61EB5EEB799105913685722FF4C9C /* NimbleEnvironment.swift in Sources */,
@@ -866,6 +865,7 @@
 				4F3F103945CC52D0A3B8A891BB0E21C4 /* RaisesException.swift in Sources */,
 				62744EF299751FB49B5FCD81D8C8FFF7 /* SatisfyAnyOf.swift in Sources */,
 				234BFC45ACAC4A8FB945EA17B6A74B0B /* SourceLocation.swift in Sources */,
+				B5B63ABD1EC7CEEE00E2CFBF /* Pokerable+CKImpl.swift in Sources */,
 				9BEBD1791C233763A8DC13080BFB99C9 /* Stringers.swift in Sources */,
 				B5B63AB71EC782F900E2CFBF /* CKArrayConstants.swift in Sources */,
 				110A640A9BE45841BA938B4C29EF5446 /* ThrowAssertion.swift in Sources */,

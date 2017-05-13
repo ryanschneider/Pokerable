@@ -1,0 +1,6 @@
+framework module Pokerable {
+  umbrella header "Pokerable-umbrella.h"
+
+  export *
+  module * { export * }
+}

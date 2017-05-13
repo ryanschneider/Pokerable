@@ -1,0 +1,22 @@
+PODS:
+  - Nimble (5.1.1)
+  - Pokerable (0.1.0)
+  - Quick (1.0.0)
+
+DEPENDENCIES:
+  - Nimble (~> 5.1.1)
+  - Pokerable (from `../`)
+  - Quick (~> 1.0.0)
+
+EXTERNAL SOURCES:
+  Pokerable:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
+  Pokerable: b847c1c0de5786e37747c1a06409086d3178ff42
+  Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
+
+PODFILE CHECKSUM: 211e3fb1cc91fd2c92df0aa2d845ed54ca2dc44d
+
+COCOAPODS: 1.1.1

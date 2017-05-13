@@ -1,0 +1,22 @@
+{
+  "name": "Pokerable",
+  "version": "0.1.0",
+  "summary": "A short description of Pokerable.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/ryanleeschneider@gmail.com/Pokerable",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "ryanleeschneider@gmail.com": "ryanleeschneider@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/ryanleeschneider@gmail.com/Pokerable.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "Pokerable/Classes/**/*"
+}
